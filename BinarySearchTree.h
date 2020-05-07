@@ -1,13 +1,52 @@
 #include <iostream>
-#include "TreeNode.h"
+
 using namespace std;
 
 template <typename T>
-class BST{
+class TreeNode{
 
   public:
-    BST();
-    ~BST();
+    TreeNode(); //tree of integers, key and value
+    TreeNode(T d);
+    ~TreeNode();
+    //virtual ~TreeNode();-when working with a template class
+      //look up a virtual destructor when using template
+
+      T data;
+      TreeNode<T> *left;
+      TreeNode<T> *right;
+};
+
+//treenode implementation
+TreeNode:: TreeNode(){
+
+    data = 0;
+    left = NULL;
+    right = NULL;
+
+}
+TreeNode::TreeNode(T d){
+  data = d;
+  left = NULL;
+  right = NULL;
+
+}
+
+//destructor to you
+TreeNode::~TreeNode(){
+    delete left;
+    delete right;
+}
+
+
+
+
+template <typename T>
+class BinarySearchTree{
+
+  public:
+    BinarySearchTree();
+    ~BinarySearchTree();
 
     TreeNode<T> *root;
 
@@ -28,28 +67,28 @@ class BST{
 };
 
 template <typename T>
-BST::BST(){
+BinarySearchTree::BinarySearchTree(){
   root = NULL;
   size = 0;
 }
 
 template <typename T>
-BST::~BST(){
+BinarySearchTree::~BinarySearchTree(){
   delete root;
 }
 
 template <typename T>
-int BST<T>::getSize(){
+int BinarySearchTree<T>::getSize(){
     return size;
 }
 
 template <typename T>
-bool BST<T>:: isEmpty(){
+bool BinarySearchTree<T>:: isEmpty(){
     return (root == NULL);
 }
 
 template <typename T>
-T BST<T>::search(T d){
+T BinarySearchTree<T>::search(T d){
 
     T item;
 
@@ -74,7 +113,7 @@ T BST<T>::search(T d){
 }
 
 template <typename T>
-void BST<T>::printTree(TreeNode<T> *node){
+void BinarySearchTree<T>::printTree(TreeNode<T> *node){
   //recursively
   if(node == NULL)
     return;
@@ -88,11 +127,11 @@ void BST<T>::printTree(TreeNode<T> *node){
 }
 
 template <typename T>
-T BST<T>::getMin(){
+T BinarySearchTree<T>::getMin(){
     //going all the way to the left
     //iterative
 
-    TreeNode *curr = root; //keep track of where we're at
+    TreeNode<T> *curr = root; //keep track of where we're at
 
     if(root == NULL){
       return NULL; //empty tree
@@ -105,11 +144,11 @@ T BST<T>::getMin(){
 }
 
 template<typename T>
-T BST<T>::getMax(){
+T BinarySearchTree<T>::getMax(){
     //going all the way to the right
     //iterative
 
-    TreeNode *curr = root; //keep track of where we're at
+    TreeNode<T> *curr = root; //keep track of where we're at
 
     if(root == NULL){
       return NULL; //empty tree
@@ -122,9 +161,9 @@ T BST<T>::getMax(){
 }
 
 template<typename T>
-void BST<T>::add(T d){
+void BinarySearchTree<T>::add(T d){
     ++size;
-    TreeNode<T> *node = new TreeNode(d);
+    TreeNode<T> *node = new TreeNode<T>(d);
 
 
     //check
@@ -134,8 +173,8 @@ void BST<T>::add(T d){
     }
     else{
       //not empty
-      TreeNode *curr = root; //start at the root
-      TreeNode *parent; //previous
+      TreeNode<T> *curr = root; //start at the root
+      TreeNode<T> *parent; //previous
 
       //traverse the tree to find the spot
       while(true){
@@ -165,7 +204,7 @@ void BST<T>::add(T d){
 }
 
 template <typename T>
-bool BST<T>::remove(T d){
+bool BinarySearchTree<T>::remove(T d){
     //identify all of the cases //left//1 child//2 child
 
       if(isEmpty())
@@ -273,12 +312,12 @@ bool BST<T>::remove(T d){
 
 
 template <typename T>
-TreeNode<T>* BST<T>::getSuccessor(TreeNode<T>* d){
+TreeNode<T>* BinarySearchTree<T>::getSuccessor(TreeNode<T>* d){
   //the parameter d represents the node to be deleted
 
-  TreeNode *current = d->right; //using right once all the way left method
-  TreeNode *sp = d; //keep track of sucessor parent
-  TreeNode *successor = d;
+  TreeNode<T> *current = d->right; //using right once all the way left method
+  TreeNode<T> *sp = d; //keep track of sucessor parent
+  TreeNode<T> *successor = d;
 
 
   while(current != NULL){

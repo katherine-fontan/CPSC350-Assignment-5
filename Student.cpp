@@ -5,11 +5,11 @@ using namespace std;
 Student::Student(){
   major = "";
   gpa = 0.0;
-  advisor = 0;
+  advisorID = 0;
 
 }
 
-Student::Student(ind sID, string sName, string sLevel, string sMajor, double sGPA, int sAdvisorID){
+Student::Student(int sID, string sName, string sLevel, string sMajor, double sGPA, int sAdvisorID){
   id = sID;
   name = sName;
   level = sLevel;
@@ -42,25 +42,4 @@ void Student::printStudent(){
   cout<< " GPA: "<<gpa<<"; ";
   cout<<" Grade: "<<level<< "; ";
   cout<< " Advisor ID: "<<advisorID << endl;
-}
-
-bool Student:: operator == (const Student &stu){
-  return(this->id == stu.id);
-}
-
-bool Student::operator != (const Student &stu){
-  return(this->id != stu.id);
-}
-
-bool Student:: operator >= (const Student &stu){
-  return(this->id >= stu.id);
-}
-bool Student::operator <= (const Student &stu){
-  return(this->id <= stu.id);
-}
-bool Student:: operator < (const Student &stu){
-  return(this->id < stu.id);
-}
-bool Student:: operator > (const Student &stu){
-  return(this->id > stu.id);
 }

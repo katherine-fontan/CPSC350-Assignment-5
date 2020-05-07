@@ -1,11 +1,14 @@
 #include "Person.h"
 #include <iostream>
-class Student{
+
+using namespace std;
+
+class Student : public Person{
 
   public:
     Student();
     ~Student();
-    Student(int id, string name, string level, string major, double gpa, int advisorID)
+    Student(int id, string name, string level, string major, double gpa, int advisorID);
 
     string major;
     double gpa;
@@ -22,11 +25,25 @@ class Student{
 
     //overload equality to compare students
 
-    bool operator == (const Student& stu)
-    bool operator != (const Student& stu);
-    //bool operator >= (const Student& stu);
-    //bool operator <= (const Student& stu);
-    bool operator < (const Student& stu);
-    bool operator > (const Student& stu);
+    bool operator == (const Student &stu){
+      return(this->id == stu.id);
+    }
+
+    bool operator != (const Student &stu){
+      return(this->id != stu.id);
+    }
+
+    bool operator >= (const Student &stu){
+      return(this->id >= stu.id);
+    }
+    bool operator <= (const Student &stu){
+      return(this->id <= stu.id);
+    }
+    bool operator < (const Student &stu){
+      return(this->id < stu.id);
+    }
+    bool operator > (const Student &stu){
+      return(this->id > stu.id);
+    }
 
 };

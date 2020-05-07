@@ -1,20 +1,20 @@
 #include "Person.h"
-
+#include <iostream>
 using namespace std;
 
 Person::Person(){
 
 }
-
 Person::~Person(){
-
+  
 }
 
-void Person:: setID(int idNum){
+
+void Person::setID(int idNum){
   id = idNum;
 }
 
-int Person:: setID(){
+int Person::getID(){
   return id;
 }
 
@@ -26,10 +26,10 @@ string Person::getName(){
   return name;
 }
 
-void Person:: setLevel(string pLevel){
+void Person::setLevel(string pLevel){
   level = pLevel;
 }
 
-string Person:: getLevel(){
+string Person::getLevel(){
   return level;
 }

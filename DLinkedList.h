@@ -91,7 +91,7 @@ T DLinkedList<T>::getFront(){
 template <typename T>
 T DLinkedList<T>::removeFront(){
   if(isEmpty())
-    return NULL;
+    return 0;
 
   ListNode<T> *node = front;
 
@@ -110,7 +110,7 @@ T DLinkedList<T>::removeFront(){
 template <typename T>
 T DLinkedList<T>::removeBack(){
   if(isEmpty())
-    return NULL;
+    return 0;
 
   ListNode<T> *node = back;
 
@@ -129,14 +129,14 @@ T DLinkedList<T>::removeBack(){
 template <typename T>
 T DLinkedList<T>::remove(T d){
   if(isEmpty())
-    return NULL;
+    return 0;
 
   ListNode<T> *curr = front;
 
   while(curr->data != d){
     curr = curr->next;
     if(curr == NULL)
-      return NULL;
+      return 0;
   }
   if(curr == front)
     front = curr ->next;
@@ -151,7 +151,7 @@ T DLinkedList<T>::remove(T d){
 
   curr->next = NULL;
   curr->prev = NULL;
-  T temp = curr->date;
+  T temp = curr->data;
   size--;
   delete curr;
 
@@ -169,7 +169,7 @@ T DLinkedList<T>::removeAtPos(int pos)
   while(index != pos){
     curr = curr->next;
     if(curr == NULL)
-      return NULL;
+      return 0;
 
     ++index;
   }

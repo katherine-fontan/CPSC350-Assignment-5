@@ -1,21 +1,24 @@
+#include <iostream>
+
+using namespace std;
+
 class Person{
 
   public:
-
-    Person();
-    ~Person();
     int id;
     string name;
     string level;
 
-    void setID(int idNum);
-    int getID();
+    Person();
+    ~Person();
 
-    void setName(string name);
     string getName();
+    void setName(string n);
 
-    void setLevel(string level);
     string getLevel();
+    void setLevel(string l);
 
+    int getID();
+    void setID(int v);
 
 };
