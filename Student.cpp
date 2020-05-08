@@ -34,12 +34,3 @@ void Student::setAdvisor(int sAdvisorID){
 int Student::getAdvisor(){
   return advisorID;
 }
-
-void Student::printStudent(){
-  cout << "Name: " <<name <<"; ";
-  cout << " ID: "<<id<< "; ";
-  cout<< " Major: "<<major<<"; ";
-  cout<< " GPA: "<<gpa<<"; ";
-  cout<<" Grade: "<<level<< "; ";
-  cout<< " Advisor ID: "<<advisorID << endl;
-}

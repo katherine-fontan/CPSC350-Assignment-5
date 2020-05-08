@@ -1,5 +1,5 @@
-#include "Person.h"
 #include "DLinkedList.h"
+#include "Person.h"
 #include <iostream>
 #include <string>
 using namespace std;
@@ -8,7 +8,7 @@ class Faculty : public Person{
 
   public:
     Faculty();
-    Faculty(int fID, string fLevel, string fName, string fDepartment, DLinkedList<int> *a);
+    Faculty(int fID, string fLevel, string fName, string fDepartment);
     ~Faculty();
 
     string department;
@@ -16,7 +16,7 @@ class Faculty : public Person{
     int maxSize; // max number of students the faculty memmber can advisees
     int adviseeCount;
 
-    void printFaculty();
+
     string getDepartment();
 
     //advisee list functions

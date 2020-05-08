@@ -7,25 +7,28 @@ class TreeNode{
 
   public:
     TreeNode(); //tree of integers, key and value
-    TreeNode(T d);
+    TreeNode(T* d, int k);
     ~TreeNode();
     //virtual ~TreeNode();-when working with a template class
       //look up a virtual destructor when using template
-
-      T data;
+      int key;
+      T* data;
       TreeNode<T> *left;
       TreeNode<T> *right;
 };
 
 //treenode implementation
-TreeNode:: TreeNode(){
+template <typename T>
+TreeNode<T>:: TreeNode(){
 
-    data = 0;
+    key = 0;
     left = NULL;
     right = NULL;
 
 }
-TreeNode::TreeNode(T d){
+template <typename T>
+TreeNode<T>::TreeNode(T* d, int k){
+  key = k;
   data = d;
   left = NULL;
   right = NULL;
@@ -33,7 +36,8 @@ TreeNode::TreeNode(T d){
 }
 
 //destructor to you
-TreeNode::~TreeNode(){
+template <typename T>
+TreeNode<T>::~TreeNode(){
     delete left;
     delete right;
 }
@@ -49,16 +53,17 @@ class BinarySearchTree{
     ~BinarySearchTree();
 
     TreeNode<T> *root;
-
     int size;
+
     int getSize();
     bool isEmpty();
-    bool contain(T d);
+    bool contain(int k);
 
-    T search (T d);
-    void add(T d);
-    bool remove(T d);
+    T* search(int k);
+    void add(TreeNode<T> *node);
+    bool remove(int k);
 
+    TreeNode<T>* getRoot();
     TreeNode<T>* getSuccessor(TreeNode<T>* d);
     T getMin();
     T getMax();
@@ -67,13 +72,13 @@ class BinarySearchTree{
 };
 
 template <typename T>
-BinarySearchTree::BinarySearchTree(){
+BinarySearchTree<T>::BinarySearchTree(){
   root = NULL;
   size = 0;
 }
 
 template <typename T>
-BinarySearchTree::~BinarySearchTree(){
+BinarySearchTree<T>::~BinarySearchTree(){
   delete root;
 }
 
@@ -88,21 +93,21 @@ bool BinarySearchTree<T>:: isEmpty(){
 }
 
 template <typename T>
-T BinarySearchTree<T>::search(T d){
+T* BinarySearchTree<T>::search(int k){
 
     T item;
 
     TreeNode<T> *curr = root;
 
     while(curr != NULL){
-        if(d > curr -> data)
+        if(k > curr -> key)
             curr = curr ->right;
 
-        else if(d < curr -> data)
+        else if(k < curr -> key)
             curr = curr -> left;
 
         else{
-            item = curr ->data;
+            item = curr ->key;
             break;
 
         }
@@ -120,7 +125,7 @@ void BinarySearchTree<T>::printTree(TreeNode<T> *node){
 
   printTree(node->left);
 
-  cout<< node->data<<endl;
+  cout<< node->key<<endl;
 
   printTree(node->right);
 
@@ -140,7 +145,7 @@ T BinarySearchTree<T>::getMin(){
     while(curr->left != NULL){
       curr = curr->left;
     }
-    return curr->data;
+    return curr->key;
 }
 
 template<typename T>
@@ -157,13 +162,13 @@ T BinarySearchTree<T>::getMax(){
     while(curr->right != NULL){
       curr = curr->right;
     }
-    return curr->data;
+    return curr->key;
 }
 
 template<typename T>
-void BinarySearchTree<T>::add(T d){
+void BinarySearchTree<T>::add(TreeNode<T> *node){
     ++size;
-    TreeNode<T> *node = new TreeNode<T>(d);
+
 
 
     //check
@@ -180,7 +185,7 @@ void BinarySearchTree<T>::add(T d){
       while(true){
         parent = curr;
 
-        if(d < curr->data){
+        if(node->key < curr->key){
           //go left
           curr = curr->left;
           if(curr == NULL){
@@ -204,7 +209,7 @@ void BinarySearchTree<T>::add(T d){
 }
 
 template <typename T>
-bool BinarySearchTree<T>::remove(T d){
+bool BinarySearchTree<T>::remove(int k){
     //identify all of the cases //left//1 child//2 child
 
       if(isEmpty())
@@ -216,10 +221,10 @@ bool BinarySearchTree<T>::remove(T d){
       TreeNode<T> *current = root;
       bool isLeft = true;
 
-      while(current->data != d){
+      while(current->key != k){
 
         parent = current;
-        if(d < current->data){
+        if(k < current->key){
           isLeft = true;
           current = current->left;
         }
@@ -295,7 +300,7 @@ bool BinarySearchTree<T>::remove(T d){
       TreeNode<T> *successor = getSuccessor(current);
 
       if(current == root)
-        root = sucessor;
+        root = successor;
       else if (isLeft)
         parent->left = successor;
       else
@@ -304,26 +309,31 @@ bool BinarySearchTree<T>::remove(T d){
       //connect/link successor to current's left child which is d
       successor->left = current->left;
 
-      return true;
+
     }
+    --size;
+    return true;
 
 }
 
-
+template <typename T>
+TreeNode<T>* BinarySearchTree<T>::getRoot(){
+  return root;
+}
 
 template <typename T>
 TreeNode<T>* BinarySearchTree<T>::getSuccessor(TreeNode<T>* d){
   //the parameter d represents the node to be deleted
 
   TreeNode<T> *current = d->right; //using right once all the way left method
-  TreeNode<T> *sp = d; //keep track of sucessor parent
+  TreeNode<T> *sp = d; //keep track of successor parent
   TreeNode<T> *successor = d;
 
 
   while(current != NULL){
     //all the way to the left
 
-    sp = sucessor;
+    sp = successor;
     successor = current;
     current = current->left; //going all the way left
   }
@@ -336,4 +346,28 @@ TreeNode<T>* BinarySearchTree<T>::getSuccessor(TreeNode<T>* d){
   }
     return successor;
 
+}
+template <typename T>
+bool BinarySearchTree<T>::contain(int k){
+
+  if(root == NULL){
+    return false;
+  }
+
+  TreeNode<T> *curr = root;
+
+  while(curr->key != k){
+
+    if(k<curr->key){
+      curr = curr->left;
+    }
+    else{
+      curr = curr->right;
+    }
+    if(curr == NULL){
+      return false;
+    }
+
+  }
+  return true;
 }

@@ -1,6 +1,7 @@
 #include "Person.h"
 #include <iostream>
 
+
 using namespace std;
 
 class Student : public Person{
@@ -20,7 +21,7 @@ class Student : public Person{
     void setAdvisor(int advisorID);
     int getAdvisor();
 
-    void printStudent();
+
 
 
     //overload equality to compare students

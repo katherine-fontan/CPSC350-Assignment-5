@@ -1,4 +1,6 @@
 #include <iostream>
+#ifndef included
+#define included
 
 using namespace std;
 
@@ -22,3 +24,4 @@ class Person{
     void setID(int v);
 
 };
+#endif

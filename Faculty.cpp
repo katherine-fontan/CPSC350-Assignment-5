@@ -11,13 +11,14 @@ Faculty::~Faculty(){
   delete adviseeList;
 }
 
-Faculty::Faculty(int fID, string fLevel, string fName, string fDepartment ,DLinkedList<int> *a){
+Faculty::Faculty(int fID, string fLevel, string fName, string fDepartment){
 
   id = fID;
   name = fName;
   level = fLevel;
   department = fDepartment;
-  adviseeList = a;
+  adviseeList = new DLinkedList<int>();
+
 }
 
 string Faculty:: getDepartment(){
