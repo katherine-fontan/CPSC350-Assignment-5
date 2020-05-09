@@ -5,11 +5,3 @@ sophomore
 business
 3.0
 4321
---
-12345
-Fernanda
-freshman
-Netflix
-3.9
-765
-

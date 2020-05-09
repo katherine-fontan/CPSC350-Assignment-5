@@ -29,8 +29,10 @@ class Database{
       void printAllFaculty();
       void printStudent();
       void printFaculty();
-      void printAdvisor();
-      void printAdvisee();
+      void findStudent(int id);
+      void findFaculty(int id);
+      void printAdvisor(int stuID);
+      void printAdvisees(int facID);
 
       //adding and deleting functions
       void addStudent();
@@ -45,7 +47,7 @@ class Database{
 
       void importFiles();
       void exportFiles();
-      
+
 
 
       void rollBack();

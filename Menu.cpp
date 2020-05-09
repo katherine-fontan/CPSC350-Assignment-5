@@ -9,7 +9,7 @@ Menu::Menu(){
 
 void Menu::welcome(){
 
-  cout << "Student & Faculty Records Database"<< endl;
+  cout << "\n\nStudent & Faculty Records Database"<< endl;
 
   displayMenu();
 }

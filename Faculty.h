@@ -23,7 +23,7 @@ class Faculty : public Person{
 
     DLinkedList<int>* getAdviseeList();
     int getAdviseeListSize();
-    void addAvisee(int adviseeID);
+    void addAdvisee(int adviseeID);
     void removeAdvisee(int adviseeID);
     int deleteAdvisee();
 

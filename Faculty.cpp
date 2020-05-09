@@ -34,7 +34,7 @@ int Faculty:: getAdviseeListSize(){
     return adviseeList->getSize();
 }
 
-void Faculty::addAvisee(int id){
+void Faculty::addAdvisee(int id){
 
     adviseeList->insertFront(id);
 }

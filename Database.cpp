@@ -28,9 +28,6 @@ void Database::importFiles(){
   ifstream facultyFile;
   string input = "";
 
-  //int sCount = 0;
-  int switchStudent = 1;
-
   //variables for student and faculty
 
   int sID = 0;
@@ -120,7 +117,7 @@ void Database::importFiles(){
   cout << "student filled"<<endl;
 
 
-  studentFile.close();
+
 
   int fID = 0;
   string fName = "";
@@ -205,7 +202,7 @@ void Database::importFiles(){
                 cout<< "INCORRECT FORMAT"<<endl;
               }
 
-              f->addAvisee(adviseeID);
+              f->addAdvisee(adviseeID);
             }
 
             masterFaculty->add(fID,f);
@@ -228,6 +225,7 @@ void Database::importFiles(){
   cout << "Faculty filled"<<endl;
 
   facultyFile.close();
+  studentFile.close();
 
 }
 
@@ -427,7 +425,7 @@ void Database::addStudent(){
         if(masterFaculty->contain(advID)){
           Faculty *fac = masterFaculty->search(advID);
 
-          fac->addAvisee(id);
+          fac->addAdvisee(id);
           break;
         }
         else{
@@ -511,7 +509,7 @@ void Database::addFaculty(){
           adviseeID = stoi(input);
 
           if(masterStudent->contain(adviseeID)){
-            fac->addAvisee(adviseeID);
+            fac->addAdvisee(adviseeID);
 
             masterStudent->search(adviseeID)->setAdvisor(id);
 
@@ -531,7 +529,7 @@ void Database::addFaculty(){
 
   }
 
-  //TreeNode<Faculty> *fNode = new TreeNode<Faculty>( id, fac);
+
   masterFaculty->add(id, fac);
 
 
@@ -583,7 +581,7 @@ int Database:: changeAdvisor(int stuID, int facID){
   }
 
   s->setAdvisor(facID);
-  f->addAvisee(stuID);
+  f->addAdvisee(stuID);
 
 
 }
@@ -652,6 +650,38 @@ void Database::printFaculty(){
 
 }
 
+
+void Database::findStudent(int id){
+
+  if(masterStudent->isEmpty()){
+
+    cout<< "There are no students"<<endl;
+
+  }
+
+  else{
+    if(masterStudent->search(id))
+      masterStudent->search(id)->printStudent();
+
+  }
+}
+
+void Database::findFaculty(int id){
+
+  if(masterFaculty->isEmpty()){
+
+    cout<< "There are no faculty"<<endl;
+
+  }
+
+  else{
+    if(masterFaculty->search(id))
+
+      masterFaculty->search(id)->printFaculty();
+  }
+
+}
+
 void Database::printAllStudents(){
   if(masterStudent->isEmpty())
     cout<< "there are no students on display"<<endl;
@@ -711,51 +741,43 @@ void Database:: printMasterFaculty(TreeNode<Faculty> *fac){
 
 }
 
-void Database::printAdvisor(){
-  int stuID;
+void Database::printAdvisor(int stuID){
+
+  if(masterFaculty->isEmpty())
+    cout<< "Faculty tree is empty"<<endl;
+
   if(masterStudent->isEmpty())
     cout<< "Student tree is empty"<<endl;
 
-  else{
-    while(true){
 
-      cout<< "What is the student's id"<<endl;
-      cin>>stuID;
+  if(!masterStudent->isEmpty() && ! masterFaculty->isEmpty()){
 
-      if(masterStudent->contain(stuID)){
-        Student *s = masterStudent->search(stuID);
-        cout<< "Advisor: ";
-        cout<< s->getAdvisor();
-        cout<< endl;
-        break;
-      }
-      else
-        cout<< "Invalid ID. Try again."<<endl;
+    if(masterStudent->contain(stuID)){
+
+          Student *s = masterStudent->search(stuID);
+
+          return findFaculty(s->getAdvisor());
     }
+    else
+      cout<< "Invalid ID. Try again."<<endl;
+
   }
+
 }
 
-void Database::printAdvisee(){
-  int facID;
-
+void Database::printAdvisees(int facID){
   if(masterFaculty->isEmpty())
-    cout<< "Faculty master is empty"<<endl;
+    cout<< "Faculty tree is empty"<<endl;
 
-  else{
+  if(masterStudent->isEmpty())
+    cout<< "Student tree is empty"<<endl;
 
-    while(true){
-      cout<< "What is the faculty id? "<<endl;
-      cin>>facID;
+    if(masterFaculty->contain(facID)){
+      Faculty *f = masterFaculty->search(facID);
 
-      int count = 0;
-
-      if(masterFaculty->contain(facID)){
-        Faculty *f = masterFaculty->search(facID);
-        f->adviseeList->printList();
-      }
-
+      cout<< "\n Advisee list: "<<endl;
+      //f->adviseeList->printList();
     }
-  }
 }
 
 
@@ -771,10 +793,10 @@ void Database::run(){
 
   bool running = true;
 
-  int stuID, facID, newID, newAdvID,id;
-
+  int studentID, facultyID, newFaculty, newAdvisor, adviseeID;
   while(running){
     int response;
+
 
     cout<< "Please choose an option from the menu: "<<endl;
     cin>>response;
@@ -789,18 +811,27 @@ void Database::run(){
         break;
 
       case 3:
-        printStudent();
+        cout<< "What is the id number of the student you are looking for? "<<endl;
+        cin>> studentID;
+        findStudent(studentID);
         break;
 
       case 4:
-        printFaculty();
+        cout<< "What is the id number of the faculty you are looking for? "<<endl;
+        cin>> facultyID;
+        findFaculty(facultyID);
         break;
+
       case 5:
-        printAdvisor();
+        cout<<"What is the student's ID number? "<<endl;
+        cin>> studentID;
+        printAdvisor(studentID);
         break;
 
       case 6:
-        printAdvisee();
+        cout<< "What is the faculty's id number? "<<endl;
+        cin>>facultyID;
+        printAdvisees(facultyID);
         break;
 
       case 7:
@@ -810,8 +841,8 @@ void Database::run(){
       case 8:
 
         cout<< "What is the id of the student you want to delete? "<<endl;
-        cin>> stuID;
-        deleteStudent(stuID);
+        cin>> studentID;
+        deleteStudent(studentID);
         break;
 
       case 9:
@@ -823,30 +854,30 @@ void Database::run(){
 
 
         cout<< "What is the ID of the faculty member? "<<endl;
-        cin>> facID;
+        cin>> facultyID;
 
         cout<< "What is the ID of the faculty that is taking its place? "<<endl;
-        cin>> newID;
+        cin>> newFaculty;
 
-        deleteFaculty(facID, newID);
+        deleteFaculty(facultyID, newFaculty);
         break;
 
       case 11:
 
 
         cout<< "What is the student's id to change adisor? "<<endl;
-        cin>>stuID ;
+        cin>>studentID ;
         cout<< "What is the new advisor's id? "<<endl;
-        cin>>newAdvID;
+        cin>>newAdvisor;
 
-        changeAdvisor(stuID,newAdvID);
+        changeAdvisor(studentID,newAdvisor);
         break;
 
       case 12:
 
         cout<< "What is the id of the advisee you want to remove? "<<endl;
-        cin>>id;
-        removeAdvisee(id);
+        cin>>adviseeID;
+        removeAdvisee(adviseeID);
         break;
 
       case 13:
