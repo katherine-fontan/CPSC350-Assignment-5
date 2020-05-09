@@ -7,7 +7,7 @@ class Menu{
   public:
 
     Menu();
-    ~Menu();
+    
 
     void welcome();
     void displayMenu();

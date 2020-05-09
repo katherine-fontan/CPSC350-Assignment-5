@@ -3,7 +3,9 @@
 #include "GenStack.h"
 #include "Faculty.h"
 #include "Student.h"
+#include "Menu.h"
 #include <fstream>
+#include <string>
 
 using namespace std;
 
@@ -25,28 +27,31 @@ class Database{
       //printing functions
       void printAllStudents();
       void printAllFaculty();
-      void pritnStudent();
+      void printStudent();
       void printFaculty();
       void printAdvisor();
       void printAdvisee();
 
       //adding and deleting functions
       void addStudent();
-      int deleteStudent();
+      void deleteStudent(int stuID);
       void addFaculty();
-      int deleteFaculty();
+      void deleteFaculty(int facID, int advTranferID);
 
 
 
-      int changeAdvisor();
-      int removeAdvisee();
+      int changeAdvisor(int frontID, int advTranferID);
+      void removeAdvisee(int stuID);
 
       void importFiles();
       void exportFiles();
+      
 
-      void printMenu();
+
       void rollBack();
       void exit();
+      void run();
+
 
       void outputStudent(TreeNode<Student> *stu, string fileName);
       void outputFaculty(TreeNode<Faculty> *fac, string fileName);
@@ -54,6 +59,8 @@ class Database{
       void bfsStudents();
       void bfsFaculty();
 
+      void printMasterStudent(TreeNode<Student> *stu);
+      void printMasterFaculty(TreeNode<Faculty> *fac);
 
 
 };

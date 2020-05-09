@@ -55,6 +55,18 @@ int Faculty::deleteAdvisee(){
     }
 }
 
+void Faculty::printFaculty(){
+
+  cout << "Faculty ID: " << id <<endl;
+  cout<< "Name: " << name << endl;
+  cout<< "Level: " << level << endl;
+  cout<< "Departent: " << department << endl;
+  cout<< "Advisee IDs: ";
+
+  adviseeList->printList();
+  cout << endl;
+}
+
 
 bool Faculty::operator == (const Faculty &fac){
   return(this->id ==fac.id);

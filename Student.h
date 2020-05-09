@@ -20,6 +20,7 @@ class Student : public Person{
 
     void setAdvisor(int advisorID);
     int getAdvisor();
+    void printStudent();
 
 
 

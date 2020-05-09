@@ -7,7 +7,7 @@ class TreeNode{
 
   public:
     TreeNode(); //tree of integers, key and value
-    TreeNode(T* d, int k);
+    TreeNode(int k, T *data);
     ~TreeNode();
     //virtual ~TreeNode();-when working with a template class
       //look up a virtual destructor when using template
@@ -27,7 +27,7 @@ TreeNode<T>:: TreeNode(){
 
 }
 template <typename T>
-TreeNode<T>::TreeNode(T* d, int k){
+TreeNode<T>::TreeNode(int k, T *d){
   key = k;
   data = d;
   left = NULL;
@@ -60,7 +60,7 @@ class BinarySearchTree{
     bool contain(int k);
 
     T* search(int k);
-    void add(TreeNode<T> *node);
+    void add(int k, T *value);
     bool remove(int k);
 
     TreeNode<T>* getRoot();
@@ -95,7 +95,7 @@ bool BinarySearchTree<T>:: isEmpty(){
 template <typename T>
 T* BinarySearchTree<T>::search(int k){
 
-    T item;
+    T* item;
 
     TreeNode<T> *curr = root;
 
@@ -107,7 +107,7 @@ T* BinarySearchTree<T>::search(int k){
             curr = curr -> left;
 
         else{
-            item = curr ->key;
+            item = curr -> data;
             break;
 
         }
@@ -166,11 +166,10 @@ T BinarySearchTree<T>::getMax(){
 }
 
 template<typename T>
-void BinarySearchTree<T>::add(TreeNode<T> *node){
+void BinarySearchTree<T>::add(int k, T *value){
     ++size;
 
-
-
+    TreeNode<T> *node = new TreeNode<T>(k,value);
     //check
     if(isEmpty()){
       //empty tree
@@ -358,7 +357,7 @@ bool BinarySearchTree<T>::contain(int k){
 
   while(curr->key != k){
 
-    if(k<curr->key){
+    if(k <curr->key){
       curr = curr->left;
     }
     else{

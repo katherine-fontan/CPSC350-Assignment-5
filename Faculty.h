@@ -28,6 +28,11 @@ class Faculty : public Person{
     int deleteAdvisee();
 
 
+    void printFaculty();
+    void printAdvisees();
+
+
+
     int getSize();
 
     //bool operators done by comparing ids
