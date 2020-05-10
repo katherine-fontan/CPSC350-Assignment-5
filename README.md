@@ -6,9 +6,9 @@ Relational Operator Overloading : https://www.geeksforgeeks.org/types-of-operato
 https://en.cppreference.com/w/cpp/language/operator_comparison
 
 
+Maya Mistry helped me with some errors I couldn't figure out!
 
 Student file format is:
-    # students in tree
     --
     id
     name
@@ -20,7 +20,6 @@ Student file format is:
 
 
 Faculty file format is:
-    # faculty
     --
     id
     name

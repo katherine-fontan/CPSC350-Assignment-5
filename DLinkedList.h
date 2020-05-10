@@ -243,5 +243,8 @@ bool DLinkedList<T>::isEmpty(){
 
 template <typename T>
 int DLinkedList<T>::getSize(){
+  if(isEmpty())
+    return 0;
+
   return size;
 }

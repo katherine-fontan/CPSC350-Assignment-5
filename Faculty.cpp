@@ -57,14 +57,15 @@ int Faculty::deleteAdvisee(){
 
 void Faculty::printFaculty(){
 
-  cout << "Faculty ID: " << id <<endl;
-  cout<< "Name: " << name << endl;
-  cout<< "Level: " << level << endl;
-  cout<< "Departent: " << department << endl;
-  cout<< "Advisee IDs: ";
+
+  cout<< "\nName: " << getName() << endl;
+  cout << "Faculty ID: " << getID() <<endl;
+  cout<< "Level: " << getLevel() << endl;
+  cout<< "Department: " << getDepartment() << endl;
+  cout<< "Advisee IDs: "<<endl;
 
   adviseeList->printList();
-  cout << endl;
+
 }
 
 

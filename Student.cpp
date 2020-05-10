@@ -37,10 +37,11 @@ int Student::getAdvisor(){
 
 void Student::printStudent(){
 
-  cout << "Name: " << name << ", ";
-  cout << "ID: " << id << ", ";
-  cout << "Major: " << major << ", ";
-  cout << "GPA: " << gpa << ", ";
-  cout << "Grade: " << level << ", ";
-  cout << "Advisor: " << advisorID << endl;
+  cout << "\nName: " << getName() << endl;
+  cout << "ID: " << getID() << endl;
+  cout << "Major: " << getMajor() << endl;
+  cout << "GPA: " << getGPA() << endl;
+  cout << "Grade: " << getLevel() << endl;
+  cout << "Advisor: " << getAdvisor() << endl;
+  cout<<endl;
 }

@@ -20,8 +20,8 @@ class Database{
 
       //create a stack for sutdent and faculty rollback
 
-      GenStack<BinarySearchTree<Student>*> *studentRollBackStack;
-      GenStack<BinarySearchTree<Faculty>*> *facultyRollBackStack;
+      //GenStack<BinarySearchTree<Student>*> *studentRollBackStack;
+      //GenStack<BinarySearchTree<Faculty>*> *facultyRollBackStack;
 
 
       //printing functions

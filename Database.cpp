@@ -142,7 +142,7 @@ void Database::importFiles(){
   if(facultyFile.is_open()){
 
 
-    while(getline(facultyFile,input)){
+    while(getline(facultyFile, input)){
 
 
 
@@ -188,7 +188,7 @@ void Database::importFiles(){
             cout<< "INCORRECT FORMAT"<<endl;
             }
 
-            Faculty *f  = new Faculty(fID,fLevel, fLevel, department);
+            Faculty *f  = new Faculty(fID,fLevel, fName, department);
 
             ++facCreated;
 
@@ -360,7 +360,7 @@ void Database::outputFaculty(TreeNode<Faculty> *f, string file){
 
 }
 void Database::addStudent(){
-
+//option 7
     //studentRollBackStack->push(masterStudent);
     //facultyRollBackStack->push(masterFaculty);
 
@@ -373,10 +373,8 @@ void Database::addStudent(){
     cin>> input;
     id = stoi(input);
 
-    bool checkID;
+    bool checkID = true;
     while(checkID){
-      Student temp;
-      temp.setID(id);
 
       if(masterStudent->contain(id)){
 
@@ -397,28 +395,20 @@ void Database::addStudent(){
     cout << "Enter the student's year "<<endl;
     cin>>year;
 
-    cout<< "Enter the studen's major "<<endl;
+    cout<< "Enter the student's major "<<endl;
     cin>>major;
 
     cout<< "Enter the Student's GPA? "<<endl;
     cin >>gpa;
 
-    //gpa check
-
-    while(gpa<0.0 || gpa>=4.0){
-      cout << "Enter valid GPA "<<endl;
-      cin>>gpa;
-
-    }
-
-
+    bool added = false;
 
     if(masterFaculty->isEmpty())
       advID = -1;
 
     if(advID != -1){
 
-      while(true){
+      while(added == false){
         cout<< "Enter student's advisor ID "<<endl;
         cin>> advID;
 
@@ -426,10 +416,14 @@ void Database::addStudent(){
           Faculty *fac = masterFaculty->search(advID);
 
           fac->addAdvisee(id);
+          added = true;
           break;
         }
         else{
-          cout<<"Invalid Id, try again "<<endl;
+          cout<<"This faculty doesn't exist, try again. Advidor ID for this student will be 0"<<endl;
+          advID = 0;
+          added = true;
+
         }
       }
     }
@@ -444,12 +438,12 @@ void Database::addStudent(){
 }
 
 void Database::addFaculty(){
-
+//option 9
   //studentRollBackStack->push(masterStudent);
   //facultyRollBackStack->push(masterFaculty);
 
 
-  string input, name, level, department;
+  string input, name, level, department, answer;
   int id, adviseeID, answerInt, numAdvisees;
 
 
@@ -487,6 +481,7 @@ void Database::addFaculty(){
 
   Faculty *fac = new Faculty(id, level, name, department);
 
+  bool added = false;
 
   cout<< "Does this faculty member have advisees?\n1- Yes\n2- no "<<endl;
   cin>>answerInt;
@@ -500,9 +495,8 @@ void Database::addFaculty(){
 
     for(int i = 0; i<numAdvisees; ++i){
 
-      while(true){
-        cout<< "Please enter a Student ID("<<numAdvisees - i << "remaining): "<<endl;
-
+      while(added == false){
+        cout<< "Please enter a Student ID("<<numAdvisees - i << " remaining): "<<endl;
         cin>>input;
 
         try{
@@ -512,12 +506,15 @@ void Database::addFaculty(){
             fac->addAdvisee(adviseeID);
 
             masterStudent->search(adviseeID)->setAdvisor(id);
+            added = true;
 
             break;
           }
 
           else{
-            cout<< "Student not found "<<endl;
+            cout<< "Student does not exist. Faculty will remain without advisees"<<endl;
+            added = true;
+
           }
         }
         catch(exception e){
@@ -530,6 +527,7 @@ void Database::addFaculty(){
   }
 
 
+
   masterFaculty->add(id, fac);
 
 
@@ -537,7 +535,7 @@ void Database::addFaculty(){
 
 void Database::deleteFaculty(int facID, int advTranferID){
 
-
+//option 10
   //studentRollBackStack->push(masterStudent);
   //facultyRollBackStack->push(masterFaculty);
 
@@ -567,40 +565,51 @@ void Database::deleteFaculty(int facID, int advTranferID){
 
 int Database:: changeAdvisor(int stuID, int facID){
 
-  //studentRollBackStack->push(masterStudent);
-  //facultyRollBackStack->push(masterFaculty);
-
+//option 11
   Student *s = masterStudent->search(stuID);
 
 
+  if(masterFaculty->contain(facID)){
 
-  Faculty *f = masterFaculty->search(facID);
+    Faculty *f = masterFaculty->search(facID);
 
-  if(s->getAdvisor()!=0){
-    s->setAdvisor(0);
+    s->setAdvisor(facID);
+    f->addAdvisee(stuID);
+    cout<< "Advisor was changed!"<<endl;
+
   }
-
-  s->setAdvisor(facID);
-  f->addAdvisee(stuID);
+  else{
+    cout<< "This faculty doesn't exist, student's advisor was removed intead"<<endl;
+      s->setAdvisor(0);
+  }
 
 
 }
 
 void Database::deleteStudent(int stuID){
+
+  //option 8
+
   //studentRollBackStack->push(masterStudent);
   //facultyRollBackStack->push(masterFaculty);
 
-  Student *s = masterStudent->search(stuID);
 
-  masterStudent->remove(stuID);
-  removeAdvisee(stuID);
+  if(!masterStudent->contain(stuID))
+    cout<< "That was an invalid ID"<<endl;
+
+  else{
+    //remove student from advisee LIST
+
+    masterFaculty->search(masterStudent->search(stuID)->getAdvisor())->removeAdvisee(stuID);
+    masterStudent->remove(stuID);
+    cout<< "Student removed!"<<endl;
+  }
 
 }
 
 void Database:: removeAdvisee(int stuID){
 
-  //studentRollBackStack->push(masterStudent);
-  //facultyRollBackStack->push(masterFaculty);
+//option 12
 
   Student *s = masterStudent->search(stuID);
 
@@ -609,11 +618,12 @@ void Database:: removeAdvisee(int stuID){
 
   f->removeAdvisee(stuID);
 
+  cout<< "Advisee was removed!"<<endl;
 
 }
 
 
-void Database::printStudent(){
+/*void Database::printStudent(){
 
   if(masterStudent->isEmpty()){
 
@@ -648,25 +658,33 @@ void Database::printFaculty(){
 
   }
 
-}
+}*/
 
 
 void Database::findStudent(int id){
+  //otion 3
 
   if(masterStudent->isEmpty()){
 
-    cout<< "There are no students"<<endl;
+    cout<< "There are no students in student tree."<<endl;
 
   }
 
   else{
-    if(masterStudent->search(id))
+    if(masterStudent->contain(id)==true)
       masterStudent->search(id)->printStudent();
 
+    else{
+      cout<< "Student is not in the system"<<endl;
+    }
+
   }
+
 }
 
 void Database::findFaculty(int id){
+
+  //option4
 
   if(masterFaculty->isEmpty()){
 
@@ -674,15 +692,19 @@ void Database::findFaculty(int id){
 
   }
 
+
   else{
-    if(masterFaculty->search(id))
+    if(masterFaculty->contain(id) == true)
 
       masterFaculty->search(id)->printFaculty();
+    else
+      cout<< "Faculty is not in the system"<<endl;
   }
 
 }
 
 void Database::printAllStudents(){
+  //option 1
   if(masterStudent->isEmpty())
     cout<< "there are no students on display"<<endl;
 
@@ -742,7 +764,7 @@ void Database:: printMasterFaculty(TreeNode<Faculty> *fac){
 }
 
 void Database::printAdvisor(int stuID){
-
+//option 5
   if(masterFaculty->isEmpty())
     cout<< "Faculty tree is empty"<<endl;
 
@@ -756,7 +778,14 @@ void Database::printAdvisor(int stuID){
 
           Student *s = masterStudent->search(stuID);
 
-          return findFaculty(s->getAdvisor());
+          if(s->getAdvisor()==0){
+            cout<< "This student doesn't have an advisor!"<<endl;
+          }
+          else{
+            return findFaculty(s->getAdvisor());
+          }
+
+
     }
     else
       cout<< "Invalid ID. Try again."<<endl;
@@ -766,27 +795,47 @@ void Database::printAdvisor(int stuID){
 }
 
 void Database::printAdvisees(int facID){
-  if(masterFaculty->isEmpty())
-    cout<< "Faculty tree is empty"<<endl;
 
-  if(masterStudent->isEmpty())
-    cout<< "Student tree is empty"<<endl;
+// option 6
 
     if(masterFaculty->contain(facID)){
       Faculty *f = masterFaculty->search(facID);
 
-      cout<< "\n Advisee list: "<<endl;
-      //f->adviseeList->printList();
-    }
+      cout<< "\nAdvisee list: "<<endl;
+
+      DLinkedList<int> *advisees = f->getAdviseeList();
+
+      ListNode<int> *curr = advisees->front;
+
+      if(f->adviseeList->getSize()==0)
+        cout<< "Faculty has zero advisees"<<endl;
+
+      for(int i=0;i< f->adviseeList->getSize(); ++i ){
+
+          int idS = curr->data;
+
+
+          masterStudent->search(idS)->printStudent();
+
+          curr = curr -> next;
+
+      }
+
+   }
 }
 
+/*void Database:: rollBack(){
+  //option 13
+}*/
 
 void Database::exit(){
+//option 14
 
   exportFiles();
   cout<< "bye!"<<endl;
 
 }
+
 
 void Database::run(){
 
@@ -865,7 +914,7 @@ void Database::run(){
       case 11:
 
 
-        cout<< "What is the student's id to change adisor? "<<endl;
+        cout<< "What is the student's id to change their advisor? "<<endl;
         cin>>studentID ;
         cout<< "What is the new advisor's id? "<<endl;
         cin>>newAdvisor;

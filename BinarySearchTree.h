@@ -167,37 +167,29 @@ T BinarySearchTree<T>::getMax(){
 
 template<typename T>
 void BinarySearchTree<T>::add(int k, T *value){
-    ++size;
+
 
     TreeNode<T> *node = new TreeNode<T>(k,value);
-    //check
-    if(isEmpty()){
-      //empty tree
+    if(root == NULL) {
       root = node;
     }
-    else{
-      //not empty
-      TreeNode<T> *curr = root; //start at the root
-      TreeNode<T> *parent; //previous
+    else {
+      TreeNode<T> *curr = root;
+      TreeNode<T> *parent;
 
-      //traverse the tree to find the spot
-      while(true){
+      while(true) {
         parent = curr;
-
-        if(node->key < curr->key){
-          //go left
+        if(node->key < curr->key) {
           curr = curr->left;
-          if(curr == NULL){
-            //insertion process
-             parent->left = node;
-             break;
+          if(curr == NULL) {
+              parent->left = node;
+              break;
           }
-
-          else{
-            //go right
+        }
+        else {
+          if(node->key > curr->key) {
             curr = curr->right;
-
-            if(curr == NULL){
+            if(curr == NULL) {
               parent->right = node;
               break;
             }
@@ -205,113 +197,99 @@ void BinarySearchTree<T>::add(int k, T *value){
         }
       }
     }
+    ++size;
+
 }
 
 template <typename T>
 bool BinarySearchTree<T>::remove(int k){
     //identify all of the cases //left//1 child//2 child
 
-      if(isEmpty())
-        return false;
+    if(root == NULL) {
+     return false;
+ }
 
-      //keep track of parent and the current
+ TreeNode<T> *curr = root;
+ TreeNode<T> *parent = root;
+ bool isLeft = true;
 
-      TreeNode<T> *parent = root;
-      TreeNode<T> *current = root;
-      bool isLeft = true;
+ while(curr->key != k) {
+   parent = curr;
 
-      while(current->key != k){
+   if(k < curr->key) {
+     isLeft = true;
+     curr = curr->left;
+   }
+   else {
+     isLeft = false;
+     curr = curr->right;
+   }
 
-        parent = current;
-        if(k < current->key){
-          isLeft = true;
-          current = current->left;
-        }
-        else{
-          isLeft = false;
-          current = current->right;
-        }
+   if(curr == NULL) {
+     return false;
+   }
+ }
 
-        if(current == NULL){
-          return false;
-        }
-      }
-      //if we make it here, we found the value now lets proceed to delete
-      //check if its leaf, 1 child, 2 children
+ //after we find the correct node, deletion depends on the number and type of children
 
-
-
-
-      if(current->left == NULL && current->right == NULL){
-        //then we have a leaf node
-
-        //determine if its the root and if its a left node or a right node
-        if(current == root)
-          root == NULL;
-        else if (isLeft)
-          parent->left = NULL;
-        else
-          parent->right = NULL;
-
-    }
-
-    //this else if determines positions of children of node to be deleted
-
-    //nodes with one child
-    else if(current->right == NULL){
-      //we have a parent with 1 child
-      //no right child so much be left child
-
-    //these branching statements identify position of node to be deleted
-        if(current == root)
-          root = current->left;
-
-        //determine the position of the node
-        else if (isLeft)
-          parent->left = current->left;
-        else
-          parent->right = current->left;
+ //When there are no children
+ if(curr->left == NULL && curr->right == NULL) {
+   if(curr == root) {
+     root = NULL;
+   }
+   else if(isLeft) {
+     parent->left = NULL;
+   }
+   else {
+     parent->right = NULL;
+   }
+ }
 
 
-    }
-    //nodes with one child
-    else if(current->left == NULL){
-      //we have a parent with 1 child
-      //no right child so much be left child
+ //A single left child
+ else if(curr->right == NULL) {
+     if(curr == root) {
+       root = curr->left;
+     }
+     else if(isLeft) {
+       parent->left = curr->left;
+   }
+     else {
+       parent->right = curr->right;
+     }
+ }
 
-      //these branching statements identify position of node to be deleted
-        if(current == root)
-          root = current->right;
+ //A single right child
+ else if(curr->left == NULL) {
+   if(curr == root) {
+       root = curr->right;
+     }
+     else if(isLeft) {
+       parent->left = curr->right;
+     }
+   else {
+       parent->right = curr->right;
+     }
+ }
 
-        else if (isLeft)
-          parent->left = current->right;
-        else
-          parent->right = current-> right;
+ //2 children
+ else {
+   TreeNode<T> *successor = getSuccessor(curr);
 
+   if(curr == root) {
+       root = successor;
+     }
+     else if(isLeft) {
+       parent->left = successor;
+     }
+     else {
+       parent->right = successor;
+     }
+     successor->left = curr->left;
+ }
 
-    }
-
-    else{
-      //the node to be deleted has two children
-
-      //at this point we begin to cry and bang our head on the keyboard
-
-      TreeNode<T> *successor = getSuccessor(current);
-
-      if(current == root)
-        root = successor;
-      else if (isLeft)
-        parent->left = successor;
-      else
-        parent->right = successor;
-
-      //connect/link successor to current's left child which is d
-      successor->left = current->left;
-
-
-    }
-    --size;
-    return true;
+ --size;
+ return true;
 
 }
 
@@ -322,28 +300,22 @@ TreeNode<T>* BinarySearchTree<T>::getRoot(){
 
 template <typename T>
 TreeNode<T>* BinarySearchTree<T>::getSuccessor(TreeNode<T>* d){
-  //the parameter d represents the node to be deleted
 
-  TreeNode<T> *current = d->right; //using right once all the way left method
-  TreeNode<T> *sp = d; //keep track of successor parent
-  TreeNode<T> *successor = d;
+  TreeNode<T>* parent = d;
+	TreeNode<T>* successor = d;
+	TreeNode<T>* curr = d->right;
 
+	while(curr != NULL) {
+		parent = successor;
+		successor = curr;
+		curr = curr->left;
+	}
 
-  while(current != NULL){
-    //all the way to the left
-
-    sp = successor;
-    successor = current;
-    current = current->left; //going all the way left
-  }
-
-  if(successor != d->right){
-    sp->left = successor->right;
-    successor->right = d->right;
-
-    //only executes if the successor is not the right child of node to be deleted
-  }
-    return successor;
+	if(successor != d->right) {
+		parent->left = successor->right;
+		successor->right = d->right;
+	}
+	return successor;
 
 }
 template <typename T>
