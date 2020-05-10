@@ -14,15 +14,14 @@ Database::Database(){
 }
 
 Database::~Database(){
-
+  delete masterStudent;
+  delete masterFaculty;
 
 }
 
 
 
 void Database::importFiles(){
-
-  cout<< "Importing files..."<<endl;
 
   ifstream studentFile;
   ifstream facultyFile;
@@ -92,7 +91,7 @@ void Database::importFiles(){
                   advisor = stoi(input);
                 }
                 catch(exception e){
-                cout<< "INCORRECT FORMAT"<<endl;
+                //cout<< "INCORRECT FORMAT"<<endl;
                 }
 
                 Student *s = new Student(sID,sName, sLevel, sMajor, gpa, advisor);
@@ -100,7 +99,6 @@ void Database::importFiles(){
                 ++stuCreated;
 
                 masterStudent-> add(sID,s);
-                cout<< "student added"<<endl;
                 break;
        }
        ++line;
@@ -114,7 +112,7 @@ void Database::importFiles(){
     cout<< "Student table was not found. Starting application with no student in the database."<<endl;
   }
 
-  cout << "student filled"<<endl;
+  cout << "Student's from file added!"<<endl;
 
 
 
@@ -144,14 +142,14 @@ void Database::importFiles(){
 
     while(getline(facultyFile, input)){
 
-
-
       switch (switchFaculty) {
         case 1:
 
-            if(input != "--"){
+            /*if(input != "--"){
+
               cout<< "INCORRECT FORMAT"<<endl;
-            }
+
+            }*/
             break;
 
         case 2:
@@ -160,7 +158,7 @@ void Database::importFiles(){
               fID = stoi(input);
             }
             catch(exception e){
-              cout<< "INCORRECT FORMAT"<<endl;
+              //cout<< "INCORRECT FORMAT"<<endl;
             }
             break;
 
@@ -185,7 +183,7 @@ void Database::importFiles(){
               adviseeNum = stoi(input);
             }
             catch(exception e){
-            cout<< "INCORRECT FORMAT"<<endl;
+            //cout<< "INCORRECT FORMAT"<<endl;
             }
 
             Faculty *f  = new Faculty(fID,fLevel, fName, department);
@@ -199,15 +197,13 @@ void Database::importFiles(){
                 adviseeID = stoi(input);
               }
               catch(exception e){
-                cout<< "INCORRECT FORMAT"<<endl;
+                //cout<< "INCORRECT FORMAT"<<endl;
               }
 
               f->addAdvisee(adviseeID);
             }
 
             masterFaculty->add(fID,f);
-            cout<< "faculty added"<<endl;
-
             break;
       }
 
@@ -221,8 +217,7 @@ void Database::importFiles(){
   else{
     cout<< "Faculty table was not found. Starting application with no faculty in the database."<<endl;
   }
-
-  cout << "Faculty filled"<<endl;
+  cout << "Faculty from file was added!"<<endl;
 
   facultyFile.close();
   studentFile.close();
@@ -243,23 +238,22 @@ void Database::exportFiles(){
   studentFile.open(sFileName);
 
   if(studentFile.is_open()){
-    studentFile << masterStudent->getSize() <<endl;
 
     TreeNode<Student> *s = masterStudent->getRoot();
 
-    outputStudent(s, sFileName);
+    outputStudent(s, studentFile);
   }
 
   studentFile.close();
 
-  //EXPORT FAUCULTY
+  //EXPORT FACULTY
 
   if(facultyFile.is_open()){
 
     facultyFile << masterFaculty->getSize()<<endl;
     TreeNode<Faculty> *f = masterFaculty->getRoot();
 
-    outputFaculty(f, fFileName);
+    outputFaculty(f, facultyFile);
   }
   facultyFile.close();
 
@@ -268,17 +262,14 @@ void Database::exportFiles(){
 
 }
 
-void Database::outputStudent(TreeNode<Student> *s, string file){
+void Database::outputStudent(TreeNode<Student> *s, ofstream &out){
 
-    ofstream out;
 
-    //student tree:
+      if(s == NULL)
+        return;
 
-    out.open(file);
+        outputStudent(s->left,out);
 
-    if(out.is_open()){
-
-      if(s != NULL){
         out<< "--" << endl;
 
         //output student to file
@@ -290,34 +281,20 @@ void Database::outputStudent(TreeNode<Student> *s, string file){
         out << s->data->getGPA() <<endl;
         out << s->data->getAdvisor() <<endl;
 
-        if(s->left != NULL)
-          outputStudent(s->left,file);
 
-        if(s->right != NULL)
-          outputStudent(s->right,file);
+        outputStudent(s->right,out);
 
 
-      }
-    }
-    else{
-      cout<< "Student tree is empty."<<endl;
-    }
-
-
-    out.close();
-    cout<< "Students were saved in the database."<<endl;
 
 }
 
-void Database::outputFaculty(TreeNode<Faculty> *f, string file){
+void Database::outputFaculty(TreeNode<Faculty> *f, ofstream &out){
 
-  ofstream out;
+    if(f = NULL)
+      return;
 
-  out.open(file);
+      outputFaculty(f->left,out);
 
-  if(out.is_open()){
-
-    if(f != NULL){
 
       out<< "--"<<endl;
 
@@ -340,23 +317,10 @@ void Database::outputFaculty(TreeNode<Faculty> *f, string file){
         }
 
 
-      if(f->left != NULL)
-        outputFaculty(f->left,file);
 
-      if(f->right != NULL)
-        outputFaculty(f->right,file);
+      outputFaculty(f->right,out);
 
 
-
-    }
-    else{
-      cout << "Faculty tree is empty"<<endl;
-    }
-    out.close();
-
-    cout<< "Faculty were saved in the database."<<endl;
-
-  }
 
 }
 void Database::addStudent(){

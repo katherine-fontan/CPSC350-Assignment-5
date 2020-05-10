@@ -55,8 +55,8 @@ class Database{
       void run();
 
 
-      void outputStudent(TreeNode<Student> *stu, string fileName);
-      void outputFaculty(TreeNode<Faculty> *fac, string fileName);
+      void outputStudent(TreeNode<Student> *stu, ofstream &out);
+      void outputFaculty(TreeNode<Faculty> *fac, ofstream &out);
 
       void bfsStudents();
       void bfsFaculty();
