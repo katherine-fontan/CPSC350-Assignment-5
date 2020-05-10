@@ -10,7 +10,7 @@ CPSC
 Daniel Frat Boy
 Junior
 CPSC
-2.0
+2
 12345
 --
 7656

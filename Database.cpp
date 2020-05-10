@@ -540,27 +540,32 @@ void Database::deleteFaculty(int facID, int advTranferID){
 }
 
 
-int Database:: changeAdvisor(int stuID, int facID){
+int Database:: changeAdvisor(int stuID, int advTranferID){
 
 //option 11
   Student *s = masterStudent->search(stuID);
 
+  int oldFacID = s->getAdvisor();
+
+  Faculty *oldFac = masterFaculty->search(oldFacID);
 
 
-  if(masterFaculty->contain(facID)){
+  if(masterFaculty->contain(advTranferID)){
 
-    Faculty *f = masterFaculty->search(facID);
+    Faculty *f = masterFaculty->search(advTranferID );
 
-    s->setAdvisor(facID);
-    f->addAdvisee(stuID);
+
+    oldFac->removeAdvisee(stuID); // remove student from original advisor
+    s->setAdvisor(advTranferID); // change the student's advisor
+    f->addAdvisee(stuID); //add student to this advisor's list
     cout<< "Advisor was changed!"<<endl;
 
   }
   else{
     cout<< "This faculty doesn't exist, student's advisor was removed intead"<<endl;
       s->setAdvisor(0);
+      oldFac->removeAdvisee(stuID); //still have to remove the student from old avisor's list
   }
-
 
 }
 
