@@ -20,15 +20,17 @@ class Database{
 
       //create a stack for sutdent and faculty rollback
 
-      //GenStack<BinarySearchTree<Student>*> *studentRollBackStack;
-      //GenStack<BinarySearchTree<Faculty>*> *facultyRollBackStack;
+      GenStack<BinarySearchTree<Student>*> *studentRollBackStack;
+      GenStack<BinarySearchTree<Faculty>*> *facultyRollBackStack;
 
+      GenStack<Student*> *studentRollBack;
+      GenStack<Faculty*> *facultyRollBack;
+
+      GenStack<int> *actionRollBack;
 
       //printing functions
       void printAllStudents();
       void printAllFaculty();
-      void printStudent();
-      void printFaculty();
       void findStudent(int id);
       void findFaculty(int id);
       void printAdvisor(int stuID);
@@ -58,11 +60,13 @@ class Database{
       void outputStudent(TreeNode<Student> *stu, ofstream &out);
       void outputFaculty(TreeNode<Faculty> *fac, ofstream &out);
 
-      void bfsStudents();
-      void bfsFaculty();
 
       void printMasterStudent(TreeNode<Student> *stu);
       void printMasterFaculty(TreeNode<Faculty> *fac);
 
+      void addStudentRollBack(Student *s);
+      void addFacultyRollBack(Faculty *f);
+      void deleteStudentRollBack(Student *s);
+      void deleteFacultyRollBack(Faculty *f);
 
 };

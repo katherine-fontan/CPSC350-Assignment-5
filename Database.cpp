@@ -11,11 +11,20 @@ Database::Database(){
 
   masterFaculty = new BinarySearchTree<Faculty>();
   //facultyRollBackStack = new GenStack<BinarySearchTree<Faculty>*>(5);
+
+  //rollback
+  studentRollBack = new GenStack<Student*>(5);
+  facultyRollBack = new GenStack<Faculty*>(5);
+
+  actionRollBack = new GenStack<int>(5);
 }
 
 Database::~Database(){
   delete masterStudent;
   delete masterFaculty;
+  delete studentRollBack;
+  delete facultyRollBack;
+  delete actionRollBack;
 
 }
 
@@ -325,6 +334,8 @@ void Database::outputFaculty(TreeNode<Faculty> *f, ofstream &out){
 }
 void Database::addStudent(){
 //option 7
+
+    actionRollBack->push(1);
     //studentRollBackStack->push(masterStudent);
     //facultyRollBackStack->push(masterFaculty);
 
@@ -396,6 +407,7 @@ void Database::addStudent(){
 
     masterStudent->add(id, student);
 
+    studentRollBack->push(student);
     cout<< "Student added! "<<endl;
 
 
@@ -403,6 +415,9 @@ void Database::addStudent(){
 
 void Database::addFaculty(){
 //option 9
+
+  actionRollBack->push(3);
+
   //studentRollBackStack->push(masterStudent);
   //facultyRollBackStack->push(masterFaculty);
 
@@ -493,6 +508,7 @@ void Database::addFaculty(){
 
 
   masterFaculty->add(id, fac);
+  facultyRollBack->push(fac);
 
 
 }
@@ -500,28 +516,32 @@ void Database::addFaculty(){
 void Database::deleteFaculty(int facID, int advTranferID){
 
 //option 10
+
+  actionRollBack->push(4);
   //studentRollBackStack->push(masterStudent);
   //facultyRollBackStack->push(masterFaculty);
 
-
-
-
   Faculty *f = masterFaculty->search(facID);
+  facultyRollBack->push(f); // roll back faculty that is going to be deleted
 
 
+//actual delete function
 
-  masterFaculty->remove(facID);
+  if(masterFaculty->contain(advTranferID)){
+    DLinkedList<int> *advisees = f->getAdviseeList();
 
-  Faculty *advTrandfer = masterFaculty->search(advTranferID);
+    ListNode<int> *curr = advisees->front;
 
-  while(f->getAdviseeListSize()!=0){
-    int frontID = f->deleteAdvisee();
+    for(int i = 0; i< f->adviseeList->getSize(); ++i){
+      int idS = curr->data;
 
-    changeAdvisor(frontID, advTranferID);
+      masterStudent->search(idS)->setAdvisor(advTranferID);
+      curr = curr -> next;
+    }
+
   }
+
   masterFaculty->remove(facID);
-
-
 
 
 }
@@ -531,6 +551,7 @@ int Database:: changeAdvisor(int stuID, int facID){
 
 //option 11
   Student *s = masterStudent->search(stuID);
+
 
 
   if(masterFaculty->contain(facID)){
@@ -554,9 +575,13 @@ void Database::deleteStudent(int stuID){
 
   //option 8
 
+  actionRollBack->push(2);
+
   //studentRollBackStack->push(masterStudent);
   //facultyRollBackStack->push(masterFaculty);
+  Student *s = masterStudent->search(stuID);
 
+  studentRollBack->push(s); //adding student to be deleted to rollback
 
   if(!masterStudent->contain(stuID))
     cout<< "That was an invalid ID"<<endl;
@@ -585,44 +610,6 @@ void Database:: removeAdvisee(int stuID){
   cout<< "Advisee was removed!"<<endl;
 
 }
-
-
-/*void Database::printStudent(){
-
-  if(masterStudent->isEmpty()){
-
-    cout<< "There are no students"<<endl;
-
-  }
-
-  else{
-    int id;
-    cout<< "What student would you like to print? "<<endl;
-    cin>> id;
-
-    masterStudent->search(id)->printStudent();
-
-  }
-}
-
-void Database::printFaculty(){
-
-  if(masterFaculty->isEmpty()){
-
-    cout<< "There are no faculty"<<endl;
-
-  }
-
-  else{
-    int id;
-    cout<< "What faculty member would you like to print? "<<endl;
-    cin>> id;
-
-    masterFaculty->search(id)->printFaculty();
-
-  }
-
-}*/
 
 
 void Database::findStudent(int id){
@@ -788,9 +775,116 @@ void Database::printAdvisees(int facID){
    }
 }
 
-/*void Database:: rollBack(){
+void Database::rollBack(){
   //option 13
-}*/
+
+  cout<< "getting action from stack"<<endl;
+  int action = actionRollBack->pop();
+
+
+  if(action == 1){
+    //undo adding a student
+    Student *stu = studentRollBack->pop();
+    cout<< "Your last action was to add: "<<endl;
+    stu->printStudent();
+    deleteStudentRollBack(stu);
+
+  }
+  else if(action == 2){
+    //undo deleting a student
+    Student *stu = studentRollBack->pop();
+    cout<< "Your last action was to delete: "<<endl;
+    stu->printStudent();
+    addStudentRollBack(stu);
+  }
+  else if(action == 3){
+    //undo adding faculty
+    Faculty *fac = facultyRollBack->pop();
+    cout<< "Your last action was to add: "<<endl;
+    fac->printFaculty();
+    deleteFacultyRollBack(fac);
+  }
+  else if(action == 4){
+    //undo delete faculty
+
+    Faculty *fac = facultyRollBack->pop();
+    cout<< "Your last action was to delete: "<<endl;
+    fac->printFaculty();
+    addFacultyRollBack(fac);
+  }
+
+  cout<< "\nUndo completed!"<<endl;
+}
+void Database::addStudentRollBack(Student *s){
+  int id = s->getID();
+  masterStudent->add(id,s);
+
+  if(s->getAdvisor() != 0){
+
+    masterFaculty->search(s->getAdvisor())->addAdvisee(id);
+
+  }
+}
+void Database::deleteStudentRollBack(Student *s){
+  //funtion to delete the student you last added (rollback)
+
+  int id = s->getID();
+  int facID = s->getAdvisor();
+
+  masterStudent->remove(id);
+
+  //delete student from advisor's list
+  if(facID != 0){
+    masterFaculty->search(facID)->removeAdvisee(id);
+
+  }
+
+}
+
+void Database::addFacultyRollBack(Faculty *f){
+  int id = f->getID();
+  masterFaculty->add(id,f);
+
+  //change back advisees'advisor
+
+  DLinkedList<int> *advisees = f->getAdviseeList();
+
+  ListNode<int> *curr = advisees->front;
+
+  for(int i = 0; i< f->adviseeList->getSize(); ++i){
+    int idS = curr->data;
+
+    masterStudent->search(idS)->setAdvisor(id);
+    curr = curr -> next;
+  }
+}
+
+void Database::deleteFacultyRollBack(Faculty *f){
+
+  int transfer;
+  int id = f->getID();
+  masterFaculty->remove(id);
+
+  //change advisees' Advisor
+  cout<< "What is the id of the faculty that its taking its place?"<<endl;
+  cin>> transfer;
+
+  if(masterFaculty->contain(transfer)){
+    DLinkedList<int> *advisees = f->getAdviseeList();
+
+    ListNode<int> *curr = advisees->front;
+
+    for(int i = 0; i< f->adviseeList->getSize(); ++i){
+      int idS = curr->data;
+
+      masterStudent->search(idS)->setAdvisor(transfer);
+      curr = curr -> next;
+    }
+
+  }
+
+
+}
 
 void Database::exit(){
 //option 14
@@ -894,7 +988,7 @@ void Database::run(){
         break;
 
       case 13:
-        //rollBack();
+        rollBack();
         break;
 
       case 14:

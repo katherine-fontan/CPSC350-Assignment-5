@@ -1,21 +1,21 @@
 --
-111
-fernanda
-highschool
-student
-3
-0
---
-222
-kat
-sop
-bus
-4
-988
---
-1234
-luna
-soph
-bus
-4.9
 4321
+John Smith
+Senior
+CPSC
+2.75
+12345
+--
+5432
+Daniel Frat Boy
+Junior
+CPSC
+2.0
+12345
+--
+7656
+Olivia Rebel
+Sophomore
+Business
+3.45
+98765
