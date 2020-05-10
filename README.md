@@ -6,6 +6,8 @@ Relational Operator Overloading :
 https://www.geeksforgeeks.org/types-of-operator-overloading-in-c/
 https://en.cppreference.com/w/cpp/language/operator_comparison
 
+Class hierarchy: https://subscription.packtpub.com/book/application_development/9781788391818/1/ch01lvl1sec12/a-class-hierarchy-the-person-student-and-employee-classes
+
 
 Maya Mistry helped me with some errors I couldn't figure out, and gave me insight on somethings I was confused on since my usual partner dropped the class :(
 
