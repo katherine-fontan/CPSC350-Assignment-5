@@ -7,10 +7,8 @@ using namespace std;
 Database::Database(){
 
   masterStudent = new BinarySearchTree<Student>();
-  //studentRollBackStack = new GenStack<BinarySearchTree<Student>*>(5);
-
   masterFaculty = new BinarySearchTree<Faculty>();
-  //facultyRollBackStack = new GenStack<BinarySearchTree<Faculty>*>(5);
+
 
   //rollback
   studentRollBack = new GenStack<Student*>(5);
@@ -418,9 +416,6 @@ void Database::addFaculty(){
 
   actionRollBack->push(3);
 
-  //studentRollBackStack->push(masterStudent);
-  //facultyRollBackStack->push(masterFaculty);
-
 
   string input, name, level, department, answer;
   int id, adviseeID, answerInt, numAdvisees;
@@ -518,14 +513,12 @@ void Database::deleteFaculty(int facID, int advTranferID){
 //option 10
 
   actionRollBack->push(4);
-  //studentRollBackStack->push(masterStudent);
-  //facultyRollBackStack->push(masterFaculty);
 
   Faculty *f = masterFaculty->search(facID);
   facultyRollBack->push(f); // roll back faculty that is going to be deleted
 
 
-//actual delete function
+//DELETE FUNCTION
 
   if(masterFaculty->contain(advTranferID)){
     DLinkedList<int> *advisees = f->getAdviseeList();
@@ -577,8 +570,7 @@ void Database::deleteStudent(int stuID){
 
   actionRollBack->push(2);
 
-  //studentRollBackStack->push(masterStudent);
-  //facultyRollBackStack->push(masterFaculty);
+
   Student *s = masterStudent->search(stuID);
 
   studentRollBack->push(s); //adding student to be deleted to rollback
